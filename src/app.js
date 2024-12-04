@@ -3,18 +3,8 @@ const app = express();
 const dotenv = require("dotenv");
 dotenv.config();
 const adminAuthorization = require("./middleware/adminAuthorization");
-const authorizeJWT = require("./middleware/authorizeJWT");
-const protectedController = require("./protected.controller");
-const cors = require("cors");
 
 app.use(express.json());
-const corsOptions = {
-  origin: "http://localhost:8080", // URL frontend
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-};
-
-app.use(cors(corsOptions));
 
 app.get("/", (req, res) => {
   res.send("Hello There!");
@@ -29,6 +19,5 @@ app.use("/api/auth", authController);
 app.use("/api/items", itemController);
 app.use("/api/users", adminAuthorization, userController);
 app.use("/api/transactions", transactionController);
-app.use("/api/protected", authorizeJWT, protectedController);
 
 export default app;
