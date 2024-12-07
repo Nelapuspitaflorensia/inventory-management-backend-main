@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
+const bcryptjs = require("bcryptjsjs");
 const userRepository = require("./auth.repository");
 
 function generateToken(user) {
@@ -17,7 +17,7 @@ function generateToken(user) {
 
 async function register(username, email, password) {
   try {
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcryptjs.hash(password, 10);
     const user = { username, email, password: hashedPassword, role: "ADMIN" };
     const newUser = await userRepository.createUser(user);
     return newUser;
@@ -33,7 +33,7 @@ async function login(username, password) {
     throw new Error("Invalid Username Or Password");
   }
 
-  const isValidPassword = await bcrypt.compare(password, user.password);
+  const isValidPassword = await bcryptjs.compare(password, user.password);
 
   if (!isValidPassword) {
     throw new Error("Invalid Username Or Password");
