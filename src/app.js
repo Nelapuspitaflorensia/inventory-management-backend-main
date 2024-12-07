@@ -1,8 +1,8 @@
 const express = require("express");
 const app = express();
 const dotenv = require("dotenv");
-dotenv.config();
 const adminAuthorization = require("./middleware/adminAuthorization");
+dotenv.config();
 
 app.use(express.json());
 
