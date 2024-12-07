@@ -18,7 +18,7 @@ function generateToken(user) {
 async function register(username, email, password) {
   try {
     const hashedPassword = await bcryptjs.hash(password, 10);
-    const user = { username, email, password: hashedPassword, role: "ADMIN" };
+    const user = { username, email, password: hashedPassword, role: "USER" };
     const newUser = await userRepository.createUser(user);
     return newUser;
   } catch (error) {
