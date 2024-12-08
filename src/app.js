@@ -5,16 +5,29 @@ const dotenv = require("dotenv");
 const adminAuthorization = require("./middleware/adminAuthorization");
 dotenv.config();
 
-// Mengaktifkan CORS agar frontend dapat mengakses backend
+// Daftar asal (origin) yang diizinkan
+const allowedOrigins = [
+  "https://inventory-management-frontend-main.vercel.app", // Asal utama frontend
+  "https://inventory-management-frontend-main-axon970al.vercel.app", // Asal tambahan
+];
+
+// Konfigurasi CORS
 const corsOptions = {
-  origin: "https://inventory-management-frontend-main-axon970al.vercel.app", // URL frontend Anda
+  origin: (origin, callback) => {
+    // Periksa apakah origin termasuk dalam daftar yang diizinkan
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true); // Izinkan akses
+    } else {
+      callback(new Error("Not allowed by CORS")); // Tolak akses
+    }
+  },
   methods: ["GET", "POST", "PUT", "DELETE"], // Metode yang diizinkan
   allowedHeaders: ["Content-Type", "Authorization"], // Header yang diizinkan
 };
 
 app.use(cors(corsOptions)); // Menggunakan CORS di seluruh aplikasi
 
-app.use(express.json());
+app.use(express.json()); // Middleware untuk parsing JSON
 
 app.get("/", (req, res) => {
   res.send("Hello There!");
@@ -33,14 +46,6 @@ app.use("/api/users", adminAuthorization, userController); // Hanya akses admin 
 app.use("/api/transactions", transactionController);
 
 // Menangani preflight request (OPTIONS) untuk CORS
-app.options("*", (req, res) => {
-  res.header(
-    "Access-Control-Allow-Origin",
-    "https://inventory-management-frontend-main-axon970al.vercel.app"
-  );
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-  res.send();
-});
+app.options("*", cors(corsOptions)); // Pastikan preflight menggunakan konfigurasi yang sama
 
 module.exports = app;
