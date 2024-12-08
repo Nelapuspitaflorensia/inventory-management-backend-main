@@ -7,7 +7,7 @@ dotenv.config();
 
 // Mengaktifkan CORS agar frontend dapat mengakses backend
 const corsOptions = {
-  origin: "https://inventory-management-frontend-main-qaqa27xms.vercel.app/", // URL frontend Anda
+  origin: "https://inventory-management-frontend-main-qaqa27xms.vercel.app", // URL frontend Anda
   methods: ["GET", "POST", "PUT", "DELETE"], // Metode yang diizinkan
   allowedHeaders: ["Content-Type", "Authorization"], // Header yang diizinkan
 };
@@ -36,7 +36,7 @@ app.use("/api/transactions", transactionController);
 app.options("*", (req, res) => {
   res.header(
     "Access-Control-Allow-Origin",
-    "https://inventory-management-frontend-main-qaqa27xms.vercel.app/"
+    "https://inventory-management-frontend-main-qaqa27xms.vercel.app"
   );
   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
