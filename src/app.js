@@ -5,31 +5,25 @@ const dotenv = require("dotenv");
 const adminAuthorization = require("./middleware/adminAuthorization");
 dotenv.config();
 
-// Daftar asal (origin) yang diizinkan
-const allowedOrigins = [
-  "https://inventory-management-frontend-main.vercel.app",
-  "https://inventory-management-frontend-main-axon970al.vercel.app",
-  "https://inventory-management-frontend-main-qaqa27xms.vercel.app/",
-];
-
-// Konfigurasi CORS
+// Konfigurasi CORS untuk mengizinkan semua origin
 const corsOptions = {
-  origin: (origin, callback) => {
-    // Periksa apakah origin termasuk dalam daftar yang diizinkan
-    if (allowedOrigins.includes(origin) || !origin) {
-      callback(null, true); // Izinkan akses
-    } else {
-      callback(new Error("Not allowed by CORS")); // Tolak akses
-    }
-  },
+  origin: "*", // Mengizinkan semua origin
   methods: ["GET", "POST", "PUT", "DELETE"], // Metode yang diizinkan
   allowedHeaders: ["Content-Type", "Authorization"], // Header yang diizinkan
 };
 
 app.use(cors(corsOptions)); // Menggunakan CORS di seluruh aplikasi
-
 app.use(express.json()); // Middleware untuk parsing JSON
 
+// Tangani preflight request (OPTIONS) untuk semua rute
+app.options("*", (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.sendStatus(200);
+});
+
+// Rute dasar
 app.get("/", (req, res) => {
   res.send("Hello There!");
 });
@@ -44,9 +38,3 @@ const transactionController = require("./transaction/transaction.controller");
 app.use("/api/auth", authController);
 app.use("/api/items", itemController);
 app.use("/api/users", adminAuthorization, userController); // Hanya akses admin yang membutuhkan middleware
-app.use("/api/transactions", transactionController);
-
-// Menangani preflight request (OPTIONS) untuk CORS
-app.options("*", cors(corsOptions)); // Pastikan preflight menggunakan konfigurasi yang sama
-
-module.exports = app;
