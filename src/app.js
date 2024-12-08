@@ -7,8 +7,9 @@ dotenv.config();
 
 // Daftar asal (origin) yang diizinkan
 const allowedOrigins = [
-  "https://inventory-management-frontend-main.vercel.app", // Asal utama frontend
-  "https://inventory-management-frontend-main-axon970al.vercel.app", // Asal tambahan
+  "https://inventory-management-frontend-main.vercel.app",
+  "https://inventory-management-frontend-main-axon970al.vercel.app",
+  "https://inventory-management-frontend-main-qaqa27xms.vercel.app/",
 ];
 
 // Konfigurasi CORS
